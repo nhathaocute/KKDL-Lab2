@@ -2,3 +2,4 @@ pandas
 scikit-learn==1.1.3
 joblib
 Flask
+numpy==1.21.6
