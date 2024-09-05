@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Prediction App</title>
+  </head>
+  <body>
+    <h1>XÂY DỰNG ỨNG DỤNG PHÂN LỚP</h1>
+    <h2>Mã số sinh viên: B2014831</h2>
+
+    <input
+      type="text"
+      id="sepal_length"
+      placeholder="Chiều dài đài hoa"
+      step="any"
+      required
+    />
+    <input
+      type="text"
+      id="sepal_width"
+      placeholder="Chiều rộng đài hoa"
+      step="any"
+      required
+    />
+    <input
+      type="text"
+      id="petal_length"
+      placeholder="Chiều dài cánh hoa"
+      step="any"
+      required
+    />
+    <input
+      type="text"
+      id="petal_width"
+      placeholder="Chiều rộng cánh hoa"
+      step="any"
+      required
+    />
+    <button onclick="predict()">Dự đoán</button>
+
+    <p id="result"></p>
+    <p id="accuracy"></p>
+
+    <script>
+      async function predict() {
+        const response = await fetch("/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            sepal_length: parseFloat(
+              document.getElementById("sepal_length").value
+            ),
+            sepal_width: parseFloat(
+              document.getElementById("sepal_width").value
+            ),
+            petal_length: parseFloat(
+              document.getElementById("petal_length").value
+            ),
+            petal_width: parseFloat(
+              document.getElementById("petal_width").value
+            ),
+          }),
+        });
+        const data = await response.json();
+        document.getElementById("result").innerText =
+          "Dự đoán: " + data.prediction;
+        document.getElementById("accuracy").innerText =
+          "Độ chính xác: " + data.accuracy.toFixed(2) + "%";
+      }
+    </script>
+  </body>
+</html>
