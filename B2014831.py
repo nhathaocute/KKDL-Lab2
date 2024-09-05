@@ -1,17 +1,12 @@
 from flask import Flask, request, jsonify, render_template
+import joblib
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-import joblib
 
 app = Flask(__name__)
 
-# Đọc mô hình đã lưu
+# Đọc mô hình và độ chính xác đã lưu
 model = joblib.load('iris_model.pkl')
-
-# Đọc dữ liệu để tính nhãn thực tế
-data = pd.read_csv('iris.csv')
-X = data.drop('species', axis=1)
-y = data['species']
 
 @app.route('/')
 def home():
@@ -29,11 +24,8 @@ def predict():
     prediction = model.predict([features])[0]
 
     # Tính toán độ chính xác
-    # Lấy nhãn thực tế cho dự đoán
     predicted_probs = model.predict_proba([features])[0]
-
-    # Tính toán độ chính xác dựa trên xác suất dự đoán
-    accuracy = max(predicted_probs) * 100  # Chọn xác suất cao nhất
+    accuracy = max(predicted_probs) * 100
 
     return jsonify({
         'prediction': prediction,
@@ -41,4 +33,4 @@ def predict():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)
